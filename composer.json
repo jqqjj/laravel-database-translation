@@ -1,0 +1,32 @@
+{
+    "name": "jqqjj/laravel-database-translation",
+    "type": "library",
+    "description": "Database translation for laravel",
+    "keywords": ["laravel", "translation", "database"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jqqjj",
+            "email": "jqqjj@qq.com"
+        }
+    ],
+    "require": {
+        "php": "~7.0",
+        "illuminate/support": "~5.5|~6.0|~7.0|~8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jqqjj\\LaravelDatabaseTranslation\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jqqjj\\LaravelDatabaseTranslation\\DatabaseTranslationProvider"
+            ]
+        },
+        "aliases": {
+            "Translation": "Jqqjj\\LaravelDatabaseTranslation\\Facades\\Translation"
+        }
+    }
+}
