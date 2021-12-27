@@ -16,7 +16,7 @@ class DatabaseTranslationProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('translation.loader', function (/*Application $app*/) {
-            return new Loader(86400 * 7);
+            return new Loader();
         });
         $this->app->singleton('translator', function (Application $app) {
             $loader = $app['translation.loader'];
@@ -25,8 +25,8 @@ class DatabaseTranslationProvider extends ServiceProvider
             $trans->setFallback($app['config']['app.fallback_locale']);
             return $trans;
         });
-        $this->app->singleton('database_laravel_translation', function () {
-            return new Translation();
+        $this->app->singleton('laravel_database_translation', function () {
+            return new Translation(86400 * 7);
         });
     }
 }
