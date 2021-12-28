@@ -4,9 +4,8 @@ namespace Jqqjj\LaravelDatabaseTranslation;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Translation\Translator;
 
-class DatabaseTranslationProvider extends ServiceProvider
+class DatabaseTranslationServiceProvider extends ServiceProvider
 {
     public function boot()
     {

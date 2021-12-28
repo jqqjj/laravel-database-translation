@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Jqqjj\\LaravelDatabaseTranslation\\DatabaseTranslationProvider"
+                "Jqqjj\\LaravelDatabaseTranslation\\DatabaseTranslationServiceProvider"
             ]
         },
         "aliases": {
