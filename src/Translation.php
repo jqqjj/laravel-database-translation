@@ -46,6 +46,15 @@ class Translation
         return Language::where(['language_code'=>$code])->first();
     }
 
+    /**
+     * @param $code
+     * @return Language|null
+     */
+    public function getEnabledLanguage($code)
+    {
+        return Language::enabled(1)->where(['language_code'=>$code])->first();
+    }
+
     public function getLanguages()
     {
         return Language::get();
@@ -74,6 +83,20 @@ class Translation
         return Language::where(['language_code'=>$code,'enabled'=>1])->update(['enabled'=>false]);
     }
 
+    /**
+     * @param $code
+     */
+    public function deleteLanguage($code)
+    {
+        Language::where(['language_code'=>$code])->delete();
+    }
+
+    /**
+     * @param $locale
+     * @param $group
+     * @param $namespace
+     * @return array
+     */
     public function getTranslations($locale, $group, $namespace)
     {
         $cacheKey = 'laravel_database_translation_'.$locale;
@@ -135,6 +158,20 @@ class Translation
         $cacheKey .= is_string($namespace) && strlen($namespace) ? ("_$namespace") : '';
         if (Cache::has($cacheKey)) {
             Cache::forget($cacheKey);
+        }
+    }
+
+    public function clearCacheAll()
+    {
+        $languages = $this->getLanguages();
+        $namespaces = $this->getNamespaces();
+        foreach ($languages as $lang) {
+            foreach ($namespaces as $namespace) {
+                $groups = $this->getGroups($namespace);
+                foreach ($groups as $group) {
+                    $this->clearCache($lang->language_code, $group, $namespace);
+                }
+            }
         }
     }
 }
