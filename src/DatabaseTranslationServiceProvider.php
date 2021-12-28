@@ -2,10 +2,11 @@
 
 namespace Jqqjj\LaravelDatabaseTranslation;
 
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-class DatabaseTranslationServiceProvider extends ServiceProvider
+class DatabaseTranslationServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     public function boot()
     {
@@ -27,5 +28,10 @@ class DatabaseTranslationServiceProvider extends ServiceProvider
         $this->app->singleton('laravel_database_translation', function () {
             return new Translation(86400 * 7);
         });
+    }
+
+    public function provides()
+    {
+        return ['translator', 'translation.loader'];
     }
 }
