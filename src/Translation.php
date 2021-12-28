@@ -47,6 +47,14 @@ class Translation
     }
 
     /**
+     * @return Language[]
+     */
+    public function getLanguages()
+    {
+        return Language::get();
+    }
+
+    /**
      * @param $code
      * @return Language|null
      */
@@ -55,11 +63,9 @@ class Translation
         return Language::enabled(1)->where(['language_code'=>$code])->first();
     }
 
-    public function getLanguages()
-    {
-        return Language::get();
-    }
-
+    /**
+     * @return Language[]
+     */
     public function getEnabledLanguages()
     {
         return Language::enabled(1)->get();
@@ -92,12 +98,128 @@ class Translation
     }
 
     /**
+     * @param $key
+     * @param $group
+     * @param string $namespace
+     * @return LanguageSource
+     */
+    public function createSource($key, $group, $namespace = '*')
+    {
+        $exist = $this->getSource($key, $group, $namespace);
+        if(!empty($exist)){
+            return $exist;
+        }
+        $lang = LanguageSource::create([
+            'namespace' => $namespace,
+            'group' => $group,
+            'key' => $key,
+        ]);
+        $lang->refresh();
+        return $lang;
+    }
+
+    /**
+     * @param $key
+     * @param $group
+     * @param $namespace
+     * @return LanguageSource|null
+     */
+    public function getSource($key, $group, $namespace = '*')
+    {
+        return LanguageSource::where([
+            'namespace' => $namespace,
+            'group' => $group,
+            'key' => $key,
+        ])->first();
+    }
+
+    /**
+     * @param $group
+     * @param $namespace
+     * @return LanguageSource[]
+     */
+    public function getSources($group, $namespace = '*')
+    {
+        return LanguageSource::where(function ($query) use($group, $namespace) {
+            if (!empty($group)) {
+                $query->where('group', $group);
+            }
+            if (!empty($namespace)) {
+                $query->where('namespace', $namespace);
+            }
+            return $query;
+        })->get();
+    }
+
+    /**
+     * @param $key
+     * @param $group
+     * @param $namespace
+     * @return bool
+     */
+    public function deleteSource($key, $group, $namespace = '*')
+    {
+        return LanguageSource::where([
+            'namespace' => $namespace,
+            'group' => $group,
+            'key' => $key,
+        ])->delete();
+    }
+
+    /**
+     * @param $group
+     * @param $namespace
+     * @return bool
+     */
+    public function deleteSources($group, $namespace = '*')
+    {
+        return LanguageSource::where([
+            'namespace' => $namespace,
+            'group' => $group,
+        ])->delete();
+    }
+
+    /**
+     * @param $translation
+     * @param Language $lang
+     * @param LanguageSource $source
+     * @return LanguageTranslation
+     */
+    public function createTranslation($translation, Language $lang, LanguageSource $source)
+    {
+        $exist = $this->getTranslation($lang, $source);
+        if (!empty($exist)) {
+            return $exist;
+        }
+        $new = LanguageTranslation::create([
+            'language_id' => $lang->language_id,
+            'language_source_id' => $source->language_source_id,
+            'translation' => $translation,
+        ]);
+        $new->refresh();
+        return $new;
+    }
+
+    /**
+     * @param Language $lang
+     * @param LanguageSource $source
+     * @return LanguageTranslation|null
+     */
+    public function getTranslation(Language $lang, LanguageSource $source)
+    {
+        return LanguageTranslation::where([
+            'language_id' => $lang->language_id,
+            'language_source_id' => $source->language_source_id,
+        ])->first();
+    }
+
+    /**
      * @param $locale
      * @param $group
      * @param $namespace
      * @return array
      */
-    public function getTranslations($locale, $group, $namespace)
+    public function getTranslations($locale, $group, $namespace = '*')
     {
         $cacheKey = 'laravel_database_translation_'.$locale;
         $cacheKey .= is_string($group) && strlen($group) ? ("_$group") : '';
@@ -136,7 +258,11 @@ class Translation
         return $translationMaps;
     }
 
-    public function getGroups($namespace = null)
+    /**
+     * @param string $namespace
+     * @return array
+     */
+    public function getGroups($namespace = '*')
     {
         return LanguageSource::where(function ($query) use($namespace) {
             if (!empty($namespace)) {
@@ -146,12 +272,20 @@ class Translation
         })->groupBy('group')->pluck('group')->toArray();
     }
 
+    /**
+     * @return array
+     */
     public function getNamespaces()
     {
         return LanguageSource::groupBy('namespace')->pluck('namespace')->toArray();
     }
 
-    public function clearCache($locale, $group, $namespace)
+    /**
+     * @param $locale
+     * @param $group
+     * @param string $namespace
+     */
+    public function clearCache($locale, $group, $namespace = '*')
     {
         $cacheKey = 'laravel_database_translation_'.$locale;
         $cacheKey .= is_string($group) && strlen($group) ? ("_$group") : '';
