@@ -25,7 +25,7 @@ class DatabaseTranslationServiceProvider extends ServiceProvider implements Defe
             $trans->setFallback($app['config']['app.fallback_locale']);
             return $trans;
         });
-        $this->app->singleton('laravel_database_translation', function () {
+        $this->app->singleton('laravel.database.translation', function () {
             return new Translation(86400 * 7);
         });
     }
