@@ -9,7 +9,7 @@ class Loader implements LoaderInterface
 {
     public function load($locale, $group, $namespace = null)
     {
-        $translations = App::get('laravel_database_translation')->getTranslations($locale, $group, $namespace);
+        $translations = App::get('laravel.database.translation')->getTranslations($locale, $group, $namespace);
         return array_filter($translations, function ($item){
             return is_string($item) && strlen($item);
         });
@@ -27,6 +27,6 @@ class Loader implements LoaderInterface
 
     public function namespaces()
     {
-        return App::get('laravel_database_translation')->getNamespaces();
+        return App::get('laravel.database.translation')->getNamespaces();
     }
 }
