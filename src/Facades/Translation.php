@@ -47,6 +47,6 @@ class Translation extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return "laravel_database_translation";
+        return "laravel.database.translation";
     }
 }
