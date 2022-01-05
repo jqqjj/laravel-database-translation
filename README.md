@@ -47,3 +47,6 @@ array Translation::getNamespaces()
 void Translation::clearCache($language, $group, $namespace = '*')
 void Translation::clearCacheAll()
 ```
+
+## LICENCE
+MIT
