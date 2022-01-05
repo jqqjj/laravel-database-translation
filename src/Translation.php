@@ -2,6 +2,7 @@
 
 namespace Jqqjj\LaravelDatabaseTranslation;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Jqqjj\LaravelDatabaseTranslation\Models\Language;
 use Jqqjj\LaravelDatabaseTranslation\Models\LanguageSource;
@@ -246,7 +247,7 @@ class Translation
         $cacheKey = 'laravel_database_translation_'.$languageCode;
         $cacheKey .= is_string($group) && strlen($group) ? ("_$group") : '';
         $cacheKey .= is_string($namespace) && strlen($namespace) ? ("_$namespace") : '';
-        if (Cache::has($cacheKey)) {
+        if (!App::hasDebugModeEnabled() && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
@@ -267,7 +268,9 @@ class Translation
             $translationMaps[$v->key] = null;
         }
 
-        Cache::put($cacheKey, $translationMaps, ceil($this->lifetimeSecond / 60));
+        if (!App::hasDebugModeEnabled()) {
+            Cache::put($cacheKey, $translationMaps, ceil($this->lifetimeSecond / 60));
+        }
 
         return $translationMaps;
     }
