@@ -23,10 +23,10 @@
         "laravel": {
             "providers": [
                 "Jqqjj\\LaravelDatabaseTranslation\\DatabaseTranslationServiceProvider"
-            ]
-        },
-        "aliases": {
-            "Translation": "Jqqjj\\LaravelDatabaseTranslation\\Facades\\Translation"
+            ],
+            "aliases": {
+                "Translation": "Jqqjj\\LaravelDatabaseTranslation\\Facades\\Translation"
+            }
         }
     }
 }
