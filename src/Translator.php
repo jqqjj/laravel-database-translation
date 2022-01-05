@@ -38,7 +38,11 @@ class Translator extends LaravelTranslator
 
         event(new NoMatchTranslationEvent($item, $group, $namespace, $locale));
 
-        return $this->makeReplacements($item, $replace);
+        if (in_array($group, ['validation'])) {
+            return $this->makeReplacements($key, $replace);
+        } else {
+            return $this->makeReplacements($item, $replace);
+        }
     }
 
     /**
