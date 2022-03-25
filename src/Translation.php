@@ -2,6 +2,7 @@
 
 namespace Jqqjj\LaravelDatabaseTranslation;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Jqqjj\LaravelDatabaseTranslation\Models\Language;
@@ -62,6 +63,14 @@ class Translation
     public function getLanguages()
     {
         return Language::get();
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function paginate($perPage = 15)
+    {
+        return Language::paginate($perPage);
     }
 
     /**

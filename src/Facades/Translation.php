@@ -2,6 +2,7 @@
 
 namespace Jqqjj\LaravelDatabaseTranslation\Facades;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Facade;
 use Jqqjj\LaravelDatabaseTranslation\Models\Language;
 use Jqqjj\LaravelDatabaseTranslation\Models\LanguageSource;
@@ -16,6 +17,7 @@ use Jqqjj\LaravelDatabaseTranslation\Models\LanguageTranslation;
  * @method static Language|null getEnabledLanguage($code)
  * @method static Language[] getLanguages()
  * @method static Language[] getEnabledLanguages()
+ * @method static LengthAwarePaginator paginate($perPage = 15)
  * @method static int enableLanguage($code)
  * @method static int disableLanguage($code)
  * @method static bool deleteLanguage($code)
