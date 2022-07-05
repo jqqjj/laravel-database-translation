@@ -9,7 +9,7 @@ class Loader implements LoaderInterface
 {
     public function load($locale, $group, $namespace = null)
     {
-        $translations = App::get('laravel.database.translation')->getTranslations($locale, $group, $namespace);
+        $translations = App::get('laravel.database.translation')->getCacheableTranslations($locale, $group, $namespace);
         return array_filter($translations, function ($item){
             return is_string($item) && strlen($item);
         });
