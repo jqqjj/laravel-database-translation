@@ -365,6 +365,7 @@ class Translation
      * @param Language|string $language
      * @param string $group
      * @param string $namespace
+     * @return string
      */
     protected function getCacheKey($language, $group, $namespace = '*')
     {
