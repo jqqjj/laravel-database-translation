@@ -186,6 +186,16 @@ class Translation
     }
 
     /**
+     * @param array $where
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function paginateTranslations($where = [], $perPage = 15)
+    {
+        return LanguageTranslation::where($where)->paginate($perPage);
+    }
+
+    /**
      * @param string $code
      * @return bool
      */
@@ -270,7 +280,7 @@ class Translation
      */
     public function getCacheableTranslations($languageCode, $group = '*', $namespace = '*')
     {
-        $cacheKey = $this->getCacheKey($languageCode, $group, $namespace);
+        $cacheKey = $this->_getCacheKey($languageCode, $group, $namespace);
         if (!App::hasDebugModeEnabled() && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
@@ -343,7 +353,7 @@ class Translation
         foreach ($namespaces as $namespace) {
             $groups = $this->getGroups($namespace);
             foreach ($groups as $group) {
-                $this->clearCache($languageCode, $group, $namespace);
+                $this->_clearCache($languageCode, $group, $namespace);
             }
         }
     }
@@ -353,9 +363,9 @@ class Translation
      * @param string $group
      * @param string $namespace
      */
-    protected function clearCache($language, $group, $namespace = '*')
+    protected function _clearCache($language, $group, $namespace = '*')
     {
-        $cacheKey = $this->getCacheKey($language, $group, $namespace);
+        $cacheKey = $this->_getCacheKey($language, $group, $namespace);
         if (Cache::has($cacheKey)) {
             Cache::forget($cacheKey);
         }
@@ -367,7 +377,7 @@ class Translation
      * @param string $namespace
      * @return string
      */
-    protected function getCacheKey($language, $group, $namespace = '*')
+    protected function _getCacheKey($language, $group, $namespace = '*')
     {
         $languageCode = $language instanceof Language ? $language->language_code : (string)$language;
         $cacheKey = 'laravel_database_translation_'.$languageCode;
